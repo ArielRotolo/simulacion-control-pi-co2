@@ -1,6 +1,6 @@
 # Trabajo Final Integrador: Control de Calidad de Aire (CO2)
 
-**Alumnos:** [COMPLETAR NOMBRE]  
+**Alumnos:** Ariel Rotolo
 **Materia:** Tecnologías para la Automatización (UTN FRBA)  
 **Profesor:** Omar Oscar Civale
 
@@ -17,7 +17,8 @@ El sistema está desarrollado integramente en HTML y JavaScript (Vanilla) de eje
 ### Opción 1: Ejecución Online (Recomendada)
 
 Haga clic en el siguiente enlace para abrir la simulación directamente en su navegador a través de GitHub Pages:
-**[Pegar aquí el link de GitHub Pages]**
+
+- [**\[Link de la Simulación\]**](https://arielrotolo.github.io/simulacion-control-pi-co2/)
 
 ### Opción 2: Ejecución Local
 

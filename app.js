@@ -166,7 +166,7 @@ window.togglePerturbacion = function (id, caudal) {
     const btn = document.getElementById(`btn-${id}`);
     const textEl = document.getElementById(`btn-${id}-text`);
     const isPuerta = id === 'puerta';
-    const nombre = isPuerta ? 'Puerta' : (id === 'ventana-f' ? 'Ventana Frontal' : 'Ventanas Traseras');
+    const nombre = isPuerta ? 'Puerta' : (id === 'ventana-f' ? 'Ventana Frontal' : 'Ventana Trasera');
 
     if (perturbacionesActivas[id]) {
         btn.classList.add('active');
@@ -179,6 +179,32 @@ window.togglePerturbacion = function (id, caudal) {
     // Recalcular inmediatamente al cambiar este parámetro
     scheduleRecalc();
 };
+
+/* ============================================================
+   RESTABLECER VALORES
+   ============================================================ */
+window.restablecerValores = function () {
+    // 1. Restaurar valores por defecto en los inputs
+    inputKp.value = "2500";
+    inputKi.value = "10";
+    inputQmax.value = "1660";
+    inputAlumnos.value = "40";
+
+    // 2. Disparar el evento 'input' para actualizar badges y color de barra
+    inputKp.dispatchEvent(new Event('input'));
+    inputKi.dispatchEvent(new Event('input'));
+    inputQmax.dispatchEvent(new Event('input'));
+    inputAlumnos.dispatchEvent(new Event('input'));
+
+    // 3. Apagar todas las perturbaciones
+    if (perturbacionesActivas['puerta']) window.togglePerturbacion('puerta', 250);
+    if (perturbacionesActivas['ventana-f']) window.togglePerturbacion('ventana-f', 150);
+    if (perturbacionesActivas['ventana-t']) window.togglePerturbacion('ventana-t', 350);
+
+    // 4. Forzar una nueva simulación
+    scheduleRecalc();
+};
+
 
 /* ============================================================
    EJECUTAR SIMULACIÓN

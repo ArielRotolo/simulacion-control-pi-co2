@@ -78,7 +78,8 @@
                         <span class="value-badge" id="kp-val">2500</span>
                     </div>
                     <div class="slider-wrapper">
-                        <input type="range" class="custom-slider" id="kp" min="100" max="10000" step="100" value="2500">
+                        <input type="range" class="custom-slider" id="kp" min="100" max="10000" step="100" value="2500" list="kp-marks">
+                        <datalist id="kp-marks"><option value="2500"></option></datalist>
                     </div>
                     <div class="slider-hints"><span>100</span><span>10 000</span></div>
                 </div>
@@ -89,7 +90,8 @@
                         <span class="value-badge" id="ki-val">10</span>
                     </div>
                     <div class="slider-wrapper">
-                        <input type="range" class="custom-slider" id="ki" min="1" max="100" step="1" value="10">
+                        <input type="range" class="custom-slider" id="ki" min="1" max="100" step="1" value="10" list="ki-marks">
+                        <datalist id="ki-marks"><option value="10"></option></datalist>
                     </div>
                     <div class="slider-hints"><span>1</span><span>100</span></div>
                 </div>
@@ -105,7 +107,8 @@
                         <span class="value-badge" id="qmax-val" style="color: #f59e0b; background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3)">1660</span>
                     </div>
                     <div class="slider-wrapper">
-                        <input type="range" class="custom-slider" id="qmax" min="500" max="2500" step="10" value="1660">
+                        <input type="range" class="custom-slider" id="qmax" min="500" max="2500" step="10" value="1660" list="qmax-marks">
+                        <datalist id="qmax-marks"><option value="1660"></option></datalist>
                     </div>
                     <div class="slider-hints"><span>500</span><span>2500</span></div>
                 </div>
@@ -127,7 +130,8 @@
                         <span class="value-badge" id="alumnos-val">40</span>
                     </div>
                     <div class="slider-wrapper">
-                        <input type="range" class="custom-slider" id="alumnos" min="0" max="60" step="1" value="40">
+                        <input type="range" class="custom-slider" id="alumnos" min="0" max="60" step="1" value="40" list="alumnos-marks">
+                        <datalist id="alumnos-marks"><option value="40"></option></datalist>
                     </div>
                     <div class="slider-hints"><span>0</span><span>60</span></div>
                 </div>
@@ -153,7 +157,15 @@
                     </button>
                     <button class="btn toggle-window-btn" id="btn-ventana-t" onclick="togglePerturbacion('ventana-t', 350)">
                         <span id="btn-ventana-t-icon">🪟</span>&nbsp;
-                        <span id="btn-ventana-t-text">Abrir Ventanas Traseras (350 m³/h)</span>
+                        <span id="btn-ventana-t-text">Abrir Ventana Trasera (350 m³/h)</span>
+                    </button>
+                </div>
+
+                <hr class="glass-divider">
+
+                <div class="mt-4 d-grid gap-2">
+                    <button class="btn btn-outline-primary" style="border-color: rgba(255,255,255,0.1);" onclick="restablecerValores()">
+                        ⟳ Restablecer Valores por Defecto
                     </button>
                 </div>
 
