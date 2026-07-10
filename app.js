@@ -23,7 +23,6 @@
 
 // ── Referencias a elementos del DOM ──────────────────────────
 let inputKp, inputKi, inputAlumnos, inputQmax;
-let btnVentana;
 
 // ── Estado de la perturbación ambiental ──────────────────────
 /** Suma total del caudal extra de extracción por puertas/ventanas abiertas (m³/h) */
@@ -59,7 +58,6 @@ function init() {
     inputKi      = document.getElementById('ki');
     inputAlumnos = document.getElementById('alumnos');
     inputQmax    = document.getElementById('qmax');
-    btnVentana   = document.getElementById('btn-ventana');
 
     // ── Configurar sliders ────────────────────────────
     // Kp y Ki son enteros (error en segundos → ganancias grandes)
@@ -76,6 +74,15 @@ function init() {
     }
     Chart.defaults.color       = '#8a9dc0';
     Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.07)';
+
+    // Registrar listeners de doble clic
+    document.getElementById('chartCO2').addEventListener('dblclick', () => {
+        if (chartCO2) chartCO2.resetZoom();
+    });
+
+    document.getElementById('chartPWM').addEventListener('dblclick', () => {
+        if (chartPWM) chartPWM.resetZoom();
+    });
 
     // Primera ejecución
     ejecutarSimulacion();
@@ -519,11 +526,6 @@ function dibujarGraficos(tiempo, co2, pwm, setpoint) {
         }
     });
 
-    // Doble clic para restablecer zoom en el gráfico CO2
-    document.getElementById('chartCO2').addEventListener('dblclick', () => {
-        chartCO2.resetZoom();
-    });
-
     // ── Gráfico 2: Señal PWM ──────────────────────────────────
     const ctxPWM = document.getElementById('chartPWM').getContext('2d');
     chartPWM = new Chart(ctxPWM, {
@@ -579,10 +581,6 @@ function dibujarGraficos(tiempo, co2, pwm, setpoint) {
         }
     });
 
-    // Doble clic para restablecer zoom en el gráfico PWM
-    document.getElementById('chartPWM').addEventListener('dblclick', () => {
-        chartPWM.resetZoom();
-    });
 }
 
 // ── Arrancar cuando el DOM esté listo ─────────────────────────
