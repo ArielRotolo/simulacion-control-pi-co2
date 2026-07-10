@@ -1,7 +1,9 @@
 # Trabajo Final Integrador: Control de Calidad de Aire (CO2)
 
 **Alumnos:** Ariel Rotolo
-**Materia:** Tecnologías para la Automatización (UTN FRBA)  
+
+**Materia:** Tecnologías para la Automatización (UTN FRBA)
+
 **Profesor:** Omar Oscar Civale
 
 ## Descripción de la Simulación
@@ -12,7 +14,7 @@ La lógica matemática de la simulación resuelve las ecuaciones diferenciales d
 
 ## Cómo ejecutar la simulación
 
-El sistema está desarrollado integramente en HTML y JavaScript (Vanilla) de ejecución del lado del cliente, por lo que **no requiere instalación de software, paquetes ni servidores locales.**
+El sistema está desarrollado integramente en HTML, CSS y JavaScript de ejecución del lado del cliente, por lo que **no requiere instalación de software, paquetes ni servidores locales.**
 
 ### Opción 1: Ejecución Online (Recomendada)
 
@@ -41,11 +43,11 @@ Desde el panel de control (lado izquierdo), se podrá interactuar con las variab
 
 ### 3. Ocupación del Aula
 
-- **Cantidad de Alumnos:** Modifica la carga (perturbación constante). Determina la tasa de inyección de CO₂. Si la reduce a 0, el sistema apagará el extractor paulatinamente hasta llegar a 0 PWM, dejando el aula en el nivel de CO₂ exterior (400 ppm).
+- **Cantidad de Alumnos:** Modifica la carga. Determina la tasa de inyección de CO₂. Si la reduce a 0, el sistema apagará el extractor a 0 PWM, dejando el aula en el nivel de CO₂ exterior (400 ppm).
 
-### 4. Perturbación Ambiental
+### 4. Perturbaciones Ambientales
 
-- **Abrir Puerta del Aula:** Introduce una perturbación negativa en el sistema (caída de CO₂). Simula una ventilación natural no controlada. Al activarla, se verá cómo el CO₂ baja repentinamente y el controlador reduce el esfuerzo del ventilador para compensarlo.
+- **Abrir Puerta o ventanas del Aula:** Introduce una perturbación negativa en el sistema (caída de CO₂). Simula una ventilación natural no controlada. Al activarla, se verá cómo el CO₂ baja repentinamente (perturbación tipo escalón) y el controlador reduce el esfuerzo del ventilador para compensarlo.
 
 ### 5. Navegación en los Gráficos
 
