@@ -225,6 +225,19 @@ body {
     padding: 6px 0;
 }
 
+.default-marker {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 14px;
+    background-color: rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    z-index: 3;
+    border-radius: 1px;
+    margin-left: -1px; /* Center the 2px width */
+}
+
 .custom-slider {
     -webkit-appearance: none;
     appearance: none;

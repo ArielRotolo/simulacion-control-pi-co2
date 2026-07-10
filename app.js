@@ -88,6 +88,23 @@ function init() {
 function configurarSlider(input, badgeId, formatter) {
     const badge = document.getElementById(badgeId);
 
+    // Crear dinámicamente el marcador visual de valor por defecto
+    const defVal = parseFloat(input.defaultValue);
+    const minVal = parseFloat(input.min);
+    const maxVal = parseFloat(input.max);
+    if (!isNaN(defVal) && !isNaN(minVal) && !isNaN(maxVal) && maxVal > minVal) {
+        const pct = (defVal - minVal) / (maxVal - minVal);
+        const thumbWidth = 16; // pixels, from CSS
+        const offset = (0.5 - pct) * thumbWidth;
+        const leftPos = `calc(${pct * 100}% + ${offset}px)`;
+
+        const marker = document.createElement('div');
+        marker.className = 'default-marker';
+        marker.style.left = leftPos;
+        marker.title = `Valor por defecto: ${defVal}`;
+        input.parentNode.appendChild(marker);
+    }
+
     // Mientras se arrastra: actualizar badge y relleno visual del track
     input.addEventListener('input', () => {
         badge.innerText = formatter(parseFloat(input.value));
