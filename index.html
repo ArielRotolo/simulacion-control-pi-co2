@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tablero de control interactivo para simulación de lazo cerrado con controlador PI para regulación de CO₂ en aulas universitarias.">
+    <title>Tablero PI · Control de CO₂ · UTN</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="style.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <!-- Chart.js Annotation Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3/dist/chartjs-plugin-annotation.min.js"></script>
+    <!-- Hammer.js (requerido por zoom plugin) -->
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2/hammer.min.js"></script>
+    <!-- Chart.js Zoom Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+</head>
+<body>
+
+<div class="app-background"></div>
+
+<div class="container-fluid app-container">
+
+    <!-- ── Header ── -->
+    <header class="header mb-4 text-center">
+        <div class="header-badge">Trabajo Final Integrador · Tecnologías para la Automatización</div>
+        <h1>Dashboard Automático de CO₂</h1>
+        <p class="subtitle">Simulación de Control en Lazo Cerrado (PI) · Aula Universitaria</p>
+        <div>
+            <span class="status-pill">
+                <span class="dot"></span>
+                Simulación activa
+                <span class="recalc-indicator" id="recalcIndicator"></span>
+            </span>
+        </div>
+    </header>
+
+    <!-- ── KPI Cards ── -->
+    <div class="kpi-row mb-4">
+        <div class="kpi-card">
+            <div class="kpi-value kpi-red" id="kpi-co2">– ppm</div>
+            <div class="kpi-label">CO₂ Final</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value kpi-blue" id="kpi-pwm">–</div>
+            <div class="kpi-label">PWM Final</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value kpi-green" id="kpi-sp">800 ppm</div>
+            <div class="kpi-label">Setpoint</div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- ══════════════════════════════════════
+             Panel de Control (Izquierdo)
+             ══════════════════════════════════════ -->
+        <div class="col-xl-3 col-lg-4">
+            <div class="glass-panel p-4 h-100 d-flex flex-column">
+
+                <!-- Control PI -->
+                <h5 class="section-title">
+                    <span class="section-icon blue">⚙️</span>
+                    Control Proporcional-Integral
+                </h5>
+
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <label for="kp">Proporcional (K<sub>p</sub>)</label>
+                        <span class="value-badge" id="kp-val">2500</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" class="custom-slider" id="kp" min="100" max="10000" step="100" value="2500">
+                    </div>
+                    <div class="slider-hints"><span>100</span><span>10 000</span></div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <label for="ki">Integral (K<sub>i</sub>)</label>
+                        <span class="value-badge" id="ki-val">10</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" class="custom-slider" id="ki" min="1" max="100" step="1" value="10">
+                    </div>
+                    <div class="slider-hints"><span>1</span><span>100</span></div>
+                </div>
+
+                <!-- Actuador -->
+                <h5 class="section-title mt-2">
+                    <span class="section-icon" style="background: rgba(245, 158, 11, 0.15)">⚙️</span>
+                    Control del Actuador
+                </h5>
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <label for="qmax" title="Caudal máximo del extractor">Caudal Máximo Extractor (m³/h)</label>
+                        <span class="value-badge" id="qmax-val" style="color: #f59e0b; background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3)">1660</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" class="custom-slider" id="qmax" min="500" max="2500" step="10" value="1660">
+                    </div>
+                    <div class="slider-hints"><span>500</span><span>2500</span></div>
+                </div>
+
+                <hr class="glass-divider">
+
+                <!-- Ocupación inicial -->
+                <h5 class="section-title">
+                    <span class="section-icon green">👥</span>
+                    Ocupación del Aula
+                </h5>
+                <p class="small mb-3" style="color:var(--text-muted)">
+                    Los alumnos están presentes desde el inicio de la clase.
+                </p>
+
+                <div class="control-group">
+                    <div class="control-label-row">
+                        <label for="alumnos">Cantidad de Alumnos</label>
+                        <span class="value-badge" id="alumnos-val">40</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" class="custom-slider" id="alumnos" min="0" max="60" step="1" value="40">
+                    </div>
+                    <div class="slider-hints"><span>0</span><span>60</span></div>
+                </div>
+
+                <hr class="glass-divider">
+
+                <!-- Perturbación ambiental -->
+                <h5 class="section-title">
+                    <span class="section-icon cyan">🚪</span>
+                    Perturbación Ambiental
+                </h5>
+                <p class="small mb-3" style="color:var(--text-muted)">
+                    Simula la apertura de aberturas — ventilación natural no controlada que reduce el CO₂. Podés activar varias a la vez.
+                </p>
+                <div class="d-grid gap-2">
+                    <button class="btn toggle-window-btn" id="btn-puerta" onclick="togglePerturbacion('puerta', 250)">
+                        <span id="btn-puerta-icon">🚪</span>&nbsp;
+                        <span id="btn-puerta-text">Abrir Puerta (250 m³/h)</span>
+                    </button>
+                    <button class="btn toggle-window-btn" id="btn-ventana-f" onclick="togglePerturbacion('ventana-f', 150)">
+                        <span id="btn-ventana-f-icon">🪟</span>&nbsp;
+                        <span id="btn-ventana-f-text">Abrir Ventana Frontal (150 m³/h)</span>
+                    </button>
+                    <button class="btn toggle-window-btn" id="btn-ventana-t" onclick="togglePerturbacion('ventana-t', 350)">
+                        <span id="btn-ventana-t-icon">🪟</span>&nbsp;
+                        <span id="btn-ventana-t-text">Abrir Ventanas Traseras (350 m³/h)</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════
+             Panel de Gráficos (Derecho)
+             ══════════════════════════════════════ -->
+        <div class="col-xl-9 col-lg-8">
+            <div class="d-flex flex-column gap-4 h-100">
+            
+                <!-- Banner de Navegación de Gráficos -->
+                <div class="glass-panel px-4 py-3 d-flex align-items-center gap-3" style="border-left: 4px solid var(--accent-blue); flex-shrink: 0;">
+                    <span class="fs-5" style="filter: hue-rotate(200deg);">🔍</span>
+                    <span class="small" style="color:var(--text-muted)">
+                        Utilizar la <strong>rueda del mouse</strong> sobre los gráficos para hacer zoom en el eje temporal y arrastrá para desplazar. <strong>Doble clic</strong> para restablecer la vista original.
+                    </span>
+                </div>
+
+                <!-- Gráfico CO2 -->
+                <div class="glass-panel p-4 flex-grow-1 d-flex flex-column chart-wrapper">
+                    <div class="chart-header">
+                        <h5 class="chart-title">
+                            <span class="chart-dot" style="background:#ef4444;"></span>
+                            Planta: Concentración de CO₂ en Aula (QoS)
+                        </h5>
+                        <span class="chart-tag">ppm vs tiempo</span>
+                    </div>
+                    <div class="chart-container flex-grow-1 position-relative">
+                        <canvas id="chartCO2"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico PWM -->
+                <div class="glass-panel p-4 flex-grow-1 d-flex flex-column chart-wrapper">
+                    <div class="chart-header">
+                        <h5 class="chart-title">
+                            <span class="chart-dot" style="background:#3b82f6;"></span>
+                            Esfuerzo de Control: Señal PWM al Extractor (Actuador)
+                        </h5>
+                        <span class="chart-tag">pwm vs tiempo</span>
+                    </div>
+                    <div class="chart-container flex-grow-1 position-relative">
+                        <canvas id="chartPWM"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- /row -->
+</div><!-- /container -->
+
+<script src="app.js"></script>
+</body>
+</html>
