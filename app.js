@@ -1,6 +1,6 @@
 /**
  * ============================================================
- *  Dashboard CO₂ – Simulación de Control PI en Lazo Cerrado
+ *  Dashboard CO₂ - Simulación de Control PI en Lazo Cerrado
  *  Trabajo Final Integrador · Tecnologías para la Automatización
  * ============================================================
  *
@@ -41,7 +41,7 @@ let debounceTimer = null;
 const SIM = Object.freeze({
     dt:           1,       // Paso de tiempo [s]
     T_TOTAL:      10800,   // Duración total: 3 horas [s]
-    T_TOTAL_MIN:  180,     // Duración total [min] – para eje X
+    T_TOTAL_MIN:  180,     // Duración total [min] - para eje X
     CO2_EXT:      400,     // CO₂ base exterior [ppm]
     PWM_MAX:      255,     // Saturación superior del actuador
     MUESTRA_CADA: 15,      // Guardar un punto cada N segundos (→ 720 pts)
@@ -51,7 +51,7 @@ const SIM = Object.freeze({
 });
 
 /* ============================================================
-   INIT – Se ejecuta cuando el DOM está listo
+   INIT - Se ejecuta cuando el DOM está listo
    ============================================================ */
 function init() {
     // Capturar elementos
@@ -218,7 +218,7 @@ window.ejecutarSimulacion = function () {
         const SETPOINT_S = 800 * 0.0005; // 0.4 segundos
 
         // ════════════════════════════════════════════════════════
-        //  BUCLE PRINCIPAL – Método de Euler (Δt = 1 s)
+        //  BUCLE PRINCIPAL - Método de Euler (Δt = 1 s)
         // ════════════════════════════════════════════════════════
         for (let t = 0; t <= SIM.T_TOTAL; t += SIM.dt) {
 
@@ -311,11 +311,29 @@ function actualizarKPIs(co2Final, pwmFinal) {
     const kpiPWM = document.getElementById('kpi-pwm');
 
     if (kpiCO2) {
-        kpiCO2.innerText = Math.round(co2Final) + ' ppm';
-        kpiCO2.className = 'kpi-value ' + (co2Final > 1000 ? 'kpi-red' : co2Final > 850 ? 'kpi-red' : 'kpi-green');
+        let co2Text = Math.round(co2Final) + ' ppm';
+        let co2Class = 'kpi-green';
+        
+        if (co2Final > 1000) {
+            co2Class = 'kpi-red';
+            co2Text = '⚠ ' + co2Text;
+        } else if (co2Final > 800) {
+            co2Class = 'kpi-orange';
+        }
+        
+        kpiCO2.innerText = co2Text;
+        kpiCO2.className = 'kpi-value ' + co2Class;
     }
+    
     if (kpiPWM) {
-        kpiPWM.innerText = Math.round(pwmFinal);
+        let pwmText = Math.round(pwmFinal);
+        let pwmClass = 'kpi-blue';
+        if (Math.round(pwmFinal) >= 255) {
+            pwmText = '⚠ ' + pwmText + ' (Extractor al máximo)';
+            pwmClass = 'kpi-red';
+        }
+        kpiPWM.innerText = pwmText;
+        kpiPWM.className = 'kpi-value ' + pwmClass;
     }
 }
 
@@ -390,7 +408,7 @@ function dibujarGraficos(tiempo, co2, pwm, setpoint) {
                     fill: false
                 },
                 {
-                    label: 'Setpoint – 800 ppm',
+                    label: 'Setpoint - 800 ppm',
                     data: setpoint,
                     borderColor: '#22c55e',
                     borderDash: [6, 5],
@@ -471,7 +489,7 @@ function dibujarGraficos(tiempo, co2, pwm, setpoint) {
             labels,
             datasets: [
                 {
-                    label: 'Señal PWM (0 – 255)',
+                    label: 'Señal PWM (0 - 255)',
                     data: pwm,
                     borderColor: '#3b82f6',
                     borderWidth: 2,
@@ -510,7 +528,7 @@ function dibujarGraficos(tiempo, co2, pwm, setpoint) {
                 y: {
                     min: 0,
                     max: 275,
-                    title: { display: true, text: 'PWM (0–255)', font: { size: 12 } },
+                    title: { display: true, text: 'PWM (0 - 255)', font: { size: 12 } },
                     grid: { color: 'rgba(255,255,255,0.05)' }
                 },
                 x: scaleXBase
